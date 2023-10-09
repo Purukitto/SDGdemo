@@ -5,10 +5,11 @@
   "type": "module",
   "homepage": "https://purukitto.github.io/SDGdemo",
   "scripts": {
-    "predeploy": "bun run upgrade && bun run build",
+    "predeploy": "bun run build",
     "upgrade": "bun uninstall simpledungeongenerator && bun install simpledungeongenerator",
     "build": "vite build",
     "deploy": "gh-pages -d dist",
+    "deploy:upgrade": "bun run upgrade && bun run deploy",
     "dev": "vite",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -17,7 +18,7 @@
     "random-words": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "simpledungeongenerator": "^0.9.4"
+    "simpledungeongenerator": "^0.9.6"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

@@ -10,6 +10,7 @@ function App() {
 	const [maxHW, setMaxHW] = useState();
 	const [result, setResult] = useState(1);
 	const [rolling, setRolling] = useState(false);
+	const [isChecked, setIsChecked] = useState(false);
 
 	const dice = {
 		1: (
@@ -127,6 +128,7 @@ function App() {
 			maxW: newMaxHW,
 			extraRoomSize: 2,
 		});
+
 		setResult(Math.floor(Math.random() * 6) + 1);
 		console.log(dungeon);
 		setdungeonMap(dungeon.map);
@@ -163,6 +165,10 @@ function App() {
 		return Math.floor(Math.random() * (50 - 20 + 1) + 20);
 	};
 
+	const handleCheckboxChange = () => {
+		setIsChecked(!isChecked);
+	};
+
 	return (
 		<div className="bg-black h-screen flex text-white overflow-hidden">
 			<div className="m-auto">
@@ -174,7 +180,7 @@ function App() {
 						>
 							simpledungeongenerator
 						</a>
-						<span className="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+						<span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
 							{packageJson.dependencies.simpledungeongenerator}
 						</span>
 					</h1>
@@ -183,32 +189,58 @@ function App() {
 				<div className="h-[400px] w-[400px] flex flex-col justify-center items-center">
 					{dungeonMap.map((row, rowIndex) => (
 						<div key={rowIndex} className="flex">
-							{row.map((cell, cellIndex) => (
-								<span
-									key={cellIndex}
-									className={`${
-										cell === "·"
-											? "bg-gray-500" // Path
-											: cell === "⛶"
-											? "bg-red-300" // Floor
-											: cell === "#"
-											? "bg-yellow-300" // Door
-											: "bg-black" // Wall
-									} w-2 h-2`}
-								></span>
-							))}
+							{row.map((cell, cellIndex) => {
+								const color =
+									cell.type === "floor"
+										? isChecked
+											? cell.roomColour
+											: "#f87171"
+										: cell.type === "path"
+										? "#f1f5f9"
+										: cell.type === "door"
+										? "#f59e0b"
+										: "#000000"; // wall
+
+								return (
+									<span
+										key={cellIndex}
+										className="h-2 w-2"
+										style={{
+											backgroundColor: color,
+										}}
+									></span>
+								);
+							})}
 						</div>
 					))}
 				</div>
 
 				{/* Seed */}
-				<div className="mt-5 text-center space-y-2">
-					<span className="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400">
+				<div className="flex mt-5 text-center space-x-2 items-center justify-center">
+					<div className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400">
 						{seed}
-					</span>
-					<span className="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-indigo-400 border border-indigo-400">
+					</div>
+					<div className="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-indigo-400 border border-indigo-400">
 						{maxHW}x{maxHW}
-					</span>
+					</div>
+					<div
+						className={`ml-4 space-x-2 ${
+							isChecked
+								? "text-green-400 border-green-400 "
+								: "text-gray-400 border-gray-500 "
+						}  text-xs font-medium px-2.5 py-0.5 rounded  border bg-gray-700`}
+					>
+						<input
+							className="w-[10px] h-[10px] mt-1"
+							type="checkbox"
+							id="index"
+							checked={isChecked}
+							onChange={handleCheckboxChange}
+						/>
+						<label className="" htmlFor="index">
+							Room Colour
+						</label>
+					</div>
 				</div>
 
 				{/* Button to generate dungeon */}
